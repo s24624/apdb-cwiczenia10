@@ -11,6 +11,7 @@ public class HospitalDbContext : DbContext
         public virtual DbSet<Patient> Patients { get; set; }
         public virtual DbSet<Medicament> Medicaments { get; set; }
         public virtual DbSet<Prescription> Prescriptions { get; set; }
+        public virtual DbSet<PrescriptionMedicament> PrescriptionMedicaments { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
             optionsBuilder.UseSqlServer("Data Source=db-mssql;Initial Catalog=2019SBD;" +
@@ -51,6 +52,22 @@ public class HospitalDbContext : DbContext
                 e=>e.IdDoctor);
                 opt.HasOne(e=>e.Patient).
                     WithMany(e=>e.Prescriptions).HasForeignKey(e=>e.IdPatient);
+            });
+            modelBuilder.Entity<PrescriptionMedicament>(opt =>
+            {
+                opt.HasKey(e=> new
+                {
+                    e.IdPrescription,
+                    e.IdMedicament
+                });
+                opt.Property(e => e.Dose);
+                opt.Property(e => e.Details).IsRequired().HasMaxLength(100);
+                opt.HasOne(e=>e.Medicament).
+                    WithMany(e=>e.PrescriptionMedicaments).HasForeignKey(
+                        e=>e.IdMedicament);
+                opt.HasOne(e=>e.Prescription).
+                    WithMany(e=>e.PrescriptionMedicaments).HasForeignKey(
+                        e=>e.IdPrescription);
             });
 
 
