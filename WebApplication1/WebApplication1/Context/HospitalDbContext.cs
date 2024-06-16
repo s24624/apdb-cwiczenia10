@@ -14,8 +14,7 @@ public class HospitalDbContext : DbContext
         public virtual DbSet<PrescriptionMedicament> PrescriptionMedicaments { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
-            optionsBuilder.UseSqlServer("Data Source=db-mssql;Initial Catalog=2019SBD;" +
-                                        "Integrated Security=True;TrustServerCertificate=True");
+            optionsBuilder.UseSqlServer("Data Source=localhost, 1433; User=SA; Password=yourStrong(!)Password; Initial Catalog=apdb6; Integrated Security=False;Connect Timeout=30;Encrypt=False");
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
            
