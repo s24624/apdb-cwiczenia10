@@ -28,4 +28,11 @@ public class PrescriptionController : ControllerBase
             return BadRequest(new { Message = ex.Message });
         }
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetPatientsWithPrescriptions(int patientId)
+    {
+        var result =await _prescriptionService.GetPatientsWithPrescriptions(patientId);
+        return Ok(result);
+    }
 }

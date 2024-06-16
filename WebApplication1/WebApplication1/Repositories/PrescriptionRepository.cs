@@ -29,9 +29,29 @@ public class PrescriptionRepository : IPrescriptionRepository
         await SaveChanges();
     }
 
+    public async Task<ICollection<PrescriptionMedicament>> GetMedicaments(int id)
+    {
+        return await _context.PrescriptionMedicaments
+            .Where(e => e.Prescription.IdPatient == id)
+            .ToListAsync();
+    }
+
+    public async Task<ICollection<PrescriptionMedicament>> GetPrescriptionMedicaments(int prescriptionId)
+    {
+        return await _context.PrescriptionMedicaments
+            .Include(pm => pm.Medicament)
+            .Where(pm => pm.IdPrescription == prescriptionId)
+            .ToListAsync();
+    }
+
     public async Task<Medicament> GetMedicamentById(int id)
     {
         return await _context.Medicaments.FirstOrDefaultAsync(e => e.IdMedicament == id);
+    }
+
+    public async Task<Doctor> GetDoctorById(int id)
+    {
+        return await _context.Doctors.FirstOrDefaultAsync(e => e.IdDoctor == id);
     }
 
     public async Task AddPrescriptionMedicament(PrescriptionMedicament prescriptionMedicament)
@@ -43,5 +63,12 @@ public class PrescriptionRepository : IPrescriptionRepository
     public async Task SaveChanges()
     {
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<ICollection<Prescription>> GetPatientPrescriptions(int id)
+    {
+        return await _context.Prescriptions
+            .Where(e => e.IdPatient == id)
+            .ToListAsync();
     }
 }
