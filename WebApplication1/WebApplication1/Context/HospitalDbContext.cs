@@ -9,8 +9,8 @@ public class HospitalDbContext : DbContext
         
         public virtual DbSet<Doctor> Doctors { get; set; }
         public virtual DbSet<Patient> Patients { get; set; }
-       
         public virtual DbSet<Medicament> Medicaments { get; set; }
+        public virtual DbSet<Prescription> Prescriptions { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
             optionsBuilder.UseSqlServer("Data Source=db-mssql;Initial Catalog=2019SBD;" +
@@ -42,6 +42,15 @@ public class HospitalDbContext : DbContext
                 opt.Property(e=>e.Description).HasMaxLength(100).IsRequired();
                 opt.Property(e=>e.Type).HasMaxLength(100).IsRequired();
                 
+            });
+            modelBuilder.Entity<Prescription>(opt =>
+            {
+                opt.HasKey(e => e.IdPrescription);
+               
+                opt.HasOne(e => e.Doctor).WithMany(e => e.Prescriptions).HasForeignKey(
+                e=>e.IdDoctor);
+                opt.HasOne(e=>e.Patient).
+                    WithMany(e=>e.Prescriptions).HasForeignKey(e=>e.IdPatient);
             });
 
 
