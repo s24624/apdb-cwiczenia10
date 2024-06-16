@@ -8,6 +8,9 @@ public class HospitalDbContext : DbContext
         public HospitalDbContext() { }
         
         public virtual DbSet<Doctor> Doctors { get; set; }
+        public virtual DbSet<Patient> Patients { get; set; }
+       
+        public virtual DbSet<Medicament> Medicaments { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
             optionsBuilder.UseSqlServer("Data Source=db-mssql;Initial Catalog=2019SBD;" +
@@ -23,8 +26,25 @@ public class HospitalDbContext : DbContext
                 entity.Property(e => e.FirstName).HasMaxLength(100).IsRequired();
                 entity.Property(e => e.LastName).HasMaxLength(100).IsRequired();
                 entity.Property(e => e.Email).HasMaxLength(100).IsRequired();
-                
-              
+
             });
+            modelBuilder.Entity<Patient>(opt =>
+            {
+                opt.HasKey(e => e.IdPatient);
+                opt.Property(e => e.FirstName ).HasMaxLength(100).IsRequired();
+                opt.Property(e => e.LastName ).HasMaxLength(100).IsRequired();
+                opt.Property(e => e.BirthDate ).IsRequired(); 
+            });
+            modelBuilder.Entity<Medicament>(opt =>
+            {
+                opt.HasKey(e => e.IdMedicament);
+                opt.Property(e=>e.Name).HasMaxLength(100).IsRequired();
+                opt.Property(e=>e.Description).HasMaxLength(100).IsRequired();
+                opt.Property(e=>e.Type).HasMaxLength(100).IsRequired();
+                
+            });
+
+
+
         }
     }
